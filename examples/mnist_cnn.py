@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
+from keras.callbacks import TensorBoard, ModelCheckpoint
 
 batch_size = 128
 num_classes = 10
@@ -60,11 +61,26 @@ model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
+model.summary()
+
+
+# visualize
+tensorboard = TensorBoard(log_dir = './logs', histogram_freq=0, write_graph=True, write_grads=False, write_images=False)
+# tensorboard = TensorBoard(log_dir = './logs', histogram_freq=1, write_graph=True, write_grads=True, write_images=True) # more node in graph of tensorboard
+
+# save mode
+checkpoint_path = "./train_1/cp.ckpt.weights.{epoch:02d}"
+ckpt = ModelCheckpoint(checkpoint_path, save_weights_only=True, save_best_only=False)
+# filepath = 'weights.{epoch:02d}-{loss:.2f}-{acc:.2f}-{val_loss:.2f}-{val_acc:.2f}.hdf5'
+# https://qiita.com/supersaiakujin/items/b9c9da9497c2163d5a74
+
+
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test))
+          validation_data=(x_test, y_test),
+          callbacks=[tensorboard, ckpt])
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
