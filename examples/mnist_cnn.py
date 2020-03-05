@@ -74,6 +74,8 @@ ckpt = ModelCheckpoint(checkpoint_path, save_weights_only=True, save_best_only=F
 # filepath = 'weights.{epoch:02d}-{loss:.2f}-{acc:.2f}-{val_loss:.2f}-{val_acc:.2f}.hdf5'
 # https://qiita.com/supersaiakujin/items/b9c9da9497c2163d5a74
 
+# load weight
+#model.load_weights("./train_1/cp.ckpt.weights.12")
 
 model.fit(x_train, y_train,
           batch_size=batch_size,
